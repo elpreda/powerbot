@@ -18,12 +18,13 @@ import org.powerbot.core.script.job.state.Node;
 import org.powerbot.core.script.job.state.Tree;
 import org.powerbot.game.api.Manifest;
 import org.powerbot.game.api.methods.input.Mouse;
+import org.powerbot.game.api.methods.tab.Inventory;
 import org.powerbot.game.api.methods.widget.Camera;
 import org.powerbot.game.api.util.Random;
 import org.powerbot.game.api.util.Time;
 
 
-@Manifest( name = "elpreda's Potato Picker", authors = { "elpreda" }, description = "Picks up potatoes", version = 1.0 )
+@Manifest( name = "elpreda's Potato Picker", authors = { "elpreda" }, description = "Picks up potatoes", version = 1.1 )
 public class PotatoPicker extends ActiveScript implements PaintListener {
     
     private final List<Node> jobsCollection = Collections.synchronizedList(new ArrayList<Node>());
@@ -44,6 +45,7 @@ public class PotatoPicker extends ActiveScript implements PaintListener {
 
     @Override
     public int loop() {
+        int check;
         if (jobContainer != null) {
 			final Node job = jobContainer.state();
 			if (job != null) {
@@ -52,6 +54,13 @@ public class PotatoPicker extends ActiveScript implements PaintListener {
 				job.join();
 			}
 	}
+        
+        check = Inventory.getCount();
+        if (check > Globals.Countcheck){
+            Globals.Count+= check - Globals.Countcheck;
+        }    
+        Globals.Countcheck = check;
+        
         return Random.nextInt(10, 50);
     }
 
@@ -75,7 +84,7 @@ public class PotatoPicker extends ActiveScript implements PaintListener {
         g.drawRoundRect(2, 56, 146, 132, 16, 16);
         g.setFont(PaintGlobals.Gothic);
         g.drawString("Elapsed: " + Time.format(elapsed), 6, 82);
-        g.drawString("Picked: " + Globals.getPerHour(Globals.Count) + "(" + Globals.Count + ")", 7, 104);
+        g.drawString("Picked/h: " + Globals.getPerHour(Globals.Count) + "(" + Globals.Count + ")", 7, 104);
         g.drawString("Status: " + Globals.Status, 8, 125);
         g.setColor(PaintGlobals.Color3);
         g.setComposite(PaintGlobals.BlueComposite);

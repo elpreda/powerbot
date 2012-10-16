@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package elpreda_potato_picker.jobs;
 
 import elpreda_potato_picker.util.Globals;
@@ -12,29 +9,22 @@ import org.powerbot.game.api.methods.interactive.Players;
 import org.powerbot.game.api.methods.node.SceneEntities;
 import org.powerbot.game.api.methods.tab.Inventory;
 import org.powerbot.game.api.methods.widget.Camera;
+import org.powerbot.game.api.util.Random;
 import org.powerbot.game.api.wrappers.node.SceneObject;
 
-/**
- *
- * @author Alin
- */
+
 public class Harvesting extends Node {
 
     @Override
     public boolean activate() {
         SceneObject Gate = SceneEntities.getNearest(Globals.ClosedGateID);
-        return !Inventory.isFull() && Game.getClientState() != 12 && (Gate == null || (Gate != null && !Gate.isOnScreen())) && !Inventory.containsOneOf(Globals.Unwanted);
+        return !Inventory.isFull() && Game.getClientState() != 12 && (Gate == null || (Gate != null && !Gate.isOnScreen())) && !Inventory.contains(Globals.Unwanted);
     }
 
     @Override
     public void execute() {
         SceneObject Potato = SceneEntities.getNearest(Globals.PotatoID);
-        int check = Inventory.getCount();
-        if (check > Globals.Countcheck){
-            Globals.Count++;
-        }    
-        Globals.Countcheck = check;
-        
+                
         if(Globals.PotatoArea.contains(Players.getLocal().getLocation())){
             if(Potato.isOnScreen()){
                 if (!Players.getLocal().isMoving() && Players.getLocal().getAnimation() != Globals.HarvestingAnimationID) {
@@ -49,10 +39,13 @@ public class Harvesting extends Node {
             
         }
         else {
-          if (Walking.getEnergy() < 20){
+          if (Walking.getEnergy() < Globals.RestStandard){
               Globals.Status = "Resting";
               Globals.wdgc.interact("Rest");
-              sleep(24000, 27000);
+              int rested = Random.nextInt(80, 95);
+              while(Walking.getEnergy() < rested){
+                  sleep(800,1000);
+              }
           }
           Globals.Status = "Walking";
           Walking.newTilePath(Globals.GivePath()).traverse();

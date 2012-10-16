@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package elpreda_potato_picker.jobs;
 
 import elpreda_potato_picker.util.Globals;
@@ -12,16 +9,13 @@ import org.powerbot.game.api.methods.tab.Inventory;
 import org.powerbot.game.api.methods.widget.Camera;
 import org.powerbot.game.api.wrappers.node.SceneObject;
 
-/**
- *
- * @author Alin
- */
+
 public class Annoyance extends Node{
 
     @Override
     public boolean activate() {
         SceneObject Gate = SceneEntities.getNearest(Globals.ClosedGateID);
-        return Game.getClientState() != 12 && ((Gate != null && Gate.isOnScreen()) || Inventory.containsOneOf(Globals.Unwanted));
+        return Game.getClientState() != 12 && ((Gate != null && Gate.isOnScreen()) || Inventory.contains(Globals.Unwanted));
     }
 
     @Override

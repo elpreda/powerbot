@@ -10,6 +10,7 @@ import org.powerbot.game.api.methods.node.SceneEntities;
 import org.powerbot.game.api.methods.tab.Inventory;
 import org.powerbot.game.api.methods.widget.Bank;
 import org.powerbot.game.api.methods.widget.Camera;
+import org.powerbot.game.api.util.Random;
 import org.powerbot.game.api.wrappers.node.SceneObject;
 
 
@@ -18,32 +19,35 @@ public class Banking extends Node {
     @Override
     public boolean activate() {
         SceneObject Gate = SceneEntities.getNearest(Globals.ClosedGateID);
-        return Inventory.isFull() && Game.getClientState() != 12 && (Gate == null || (Gate != null && !Gate.isOnScreen())) && !Inventory.containsOneOf(Globals.Unwanted);
+        return Inventory.isFull() && Game.getClientState() != 12 && (Gate == null || (Gate != null && !Gate.isOnScreen())) && !Inventory.contains(Globals.Unwanted);
     }
 
     @Override
     public void execute() {
-        SceneObject Booth = SceneEntities.getNearest(Globals.BoothID);
         
         if (Globals.BankArea.contains(Players.getLocal().getLocation())){
             Globals.Status = "Banking";
             if(Bank.isOpen()){
               Bank.depositInventory();
-              sleep(800,1300);               
+              Globals.Countcheck = 0;
+              sleep(800,1300);  
+              if(Random.nextBoolean()){
+                  Bank.close();
+              }
             }
             else {
-                if(Booth != null){
-                    if(Booth.isOnScreen()){
-                            Booth.interact("Bank");
-                            sleep(1000, 1500);
-                        }
-                }
-                else {
-                    Camera.turnTo(Booth);
-                }
+                Bank.open();
             }
         }
         else {
+            if (Walking.getEnergy() < Globals.RestStandard){
+              Globals.Status = "Resting";
+              Globals.wdgc.interact("Rest");
+              int rested = Random.nextInt(80, 95);
+              while(Walking.getEnergy() < rested){
+                  sleep(800,1000);
+              }
+            }
             Globals.Status = "Walking";
             Walking.newTilePath(Globals.GivePath()).reverse().traverse();
             sleep(600,800);

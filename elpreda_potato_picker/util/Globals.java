@@ -13,12 +13,12 @@ import org.powerbot.game.api.wrappers.widget.WidgetChild;
 public class Globals {
     
     public static int bankNow = 0;
-    public static Random rand = new Random();
     
     public static final long StartTime = System.currentTimeMillis();
     public static long Count = 0;
     public static long Countcheck = Inventory.getCount();
     public static String Status = "";
+    public static int RestStandard = 20;
     
     public static final int BoothID = 2012;
     public static final int PotatoID = 312;
@@ -38,11 +38,11 @@ public class Globals {
     public static final Area PotatoArea = new Area(new Tile[] { new Tile(3138, 3292, 0), new Tile(3137, 3269, 0), new Tile(3142, 3268, 0), 
 					new Tile(3152, 3268, 0), new Tile(3155, 3273, 0), new Tile(3155, 3281, 0), 
 					new Tile(3156, 3286, 0), new Tile(3153, 3291, 0) });
-    public static final Tile[][] Paths = new Tile[][] {new Tile[] { new Tile(3092, 3249, 0), new Tile(3099, 3250, 0), new Tile(3104, 3253, 0), 
+    public static final Tile[][] Paths = new Tile[][] {new Tile[] { new Tile(3093, 3242, 0), new Tile(3092, 3249, 0), new Tile(3099, 3250, 0), new Tile(3104, 3253, 0), 
 				new Tile(3109, 3254, 0), new Tile(3116, 3256, 0), new Tile(3121, 3260, 0), 
 				new Tile(3128, 3263, 0), new Tile(3133, 3268, 0), new Tile(3134, 3275, 0), 
 				new Tile(3135, 3283, 0), new Tile(3136, 3289, 0), new Tile(3140, 3293, 0), 
-				new Tile(3144, 3292, 0), new Tile(3144, 3286, 0), new Tile(3145, 3279, 0) }, new Tile[] { new Tile(3091, 3247, 0), new Tile(3097, 3250, 0), new Tile(3103, 3250, 0), 
+				new Tile(3144, 3292, 0), new Tile(3144, 3286, 0), new Tile(3145, 3279, 0) }, new Tile[] { new Tile(3093, 3242, 0), new Tile(3091, 3247, 0), new Tile(3097, 3250, 0), new Tile(3103, 3250, 0), 
 				new Tile(3111, 3252, 0), new Tile(3115, 3256, 0), new Tile(3120, 3261, 0), 
 				new Tile(3127, 3263, 0), new Tile(3133, 3266, 0), new Tile(3134, 3274, 0), 
 				new Tile(3134, 3282, 0), new Tile(3135, 3289, 0), new Tile(3139, 3293, 0), 
@@ -50,7 +50,7 @@ public class Globals {
 				new Tile(3145, 3280, 0) } };
     
     public static Tile[] GivePath(){
-        return Paths[rand.nextInt(0, Paths.length)];
+        return Paths[Random.nextInt(0, Paths.length)];
     }
     
     public static long getPerHour(long value){
