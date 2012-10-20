@@ -20,7 +20,7 @@ private final int MazeDoorBack3ID = 3629;
 private final int MazeDoorBack4ID = 3632;
 private final int MazeWallID = 3626;
 private final Tile Goal = new Tile(2911,4576,0);
-private SceneObject LastDoor;
+private SceneObject LastDoor, WrongDoor = null;
 
 
 private Tile reachable(Tile tile){
@@ -78,17 +78,10 @@ private final Filter<SceneObject> DoorFilter3 = new Filter<SceneObject>() {
 
             @Override
             public boolean accept(SceneObject t) {
-                return (t.getId() == MazeDoorBack1ID || t.getId() == MazeDoorBack2ID) && reachableBack(t.getLocation()) != null ;
+                return (t.getId() == MazeDoorBack1ID || t.getId() == MazeDoorBack2ID || t.getId() == MazeDoorBack3ID || t.getId() == MazeDoorBack4ID) && reachable(t.getLocation()) != null && ((t.getLocation().getX() != LastDoor.getLocation().getX() || t.getLocation().getY() != LastDoor.getLocation().getY())) && (WrongDoor==null || (WrongDoor != null && ((t.getLocation().getX() != WrongDoor.getLocation().getX() || t.getLocation().getY() != WrongDoor.getLocation().getY()))));
             }
         };
 
-private final Filter<SceneObject> DoorFilter4 = new Filter<SceneObject>() {
-
-            @Override
-            public boolean accept(SceneObject t) {
-                return (t.getId() == MazeDoorBack3ID || t.getId() == MazeDoorBack4ID) && reachableBack(t.getLocation()) != null ;
-            }
-        };
 
 
     private SceneObject FurthestWall(){
@@ -116,21 +109,26 @@ private final Filter<SceneObject> DoorFilter4 = new Filter<SceneObject>() {
         if (door == null){                       
             door = SceneEntities.getNearest(DoorFilter3);
         } 
-        if (door == null){                      
-            door = SceneEntities.getNearest(DoorFilter4);
-        } 
-            return door;        
+        return door;        
     }
     
     private void goThrough(SceneObject door){
             Tile temp = reachable(door.getLocation());
+            int i = 0;
             
                 if(door.isOnScreen()){
                     door.interact("Open");
-                    while(temp.getX() == reachable(door.getLocation()).getX() && temp.getY() == reachable(door.getLocation()).getY()){                        
+                    for(i = 0; i<11; i++){ 
+                        if((temp.getX() != reachable(door.getLocation()).getX() || temp.getY() != reachable(door.getLocation()).getY())){
+                            break;
+                        }
                         Camera.turnTo(door);
                         door.interact("Open");
-                        sleep(1000,2000);
+                        sleep(2000,2100);
+                    }
+                    if( i>=11){
+                        WrongDoor = door;
+                        return;
                     }
                 }
                 else{                
@@ -141,10 +139,17 @@ private final Filter<SceneObject> DoorFilter4 = new Filter<SceneObject>() {
                         sleep(1000,2000);
                     }
                     door.interact("Open");
-                    while(temp.getX() == reachable(door.getLocation()).getX() && temp.getY() == reachable(door.getLocation()).getY()){
+                    for(i = 0; i<11; i++){ 
+                        if((temp.getX() != reachable(door.getLocation()).getX() || temp.getY() != reachable(door.getLocation()).getY())){
+                            break;
+                        }
                         Camera.turnTo(door);
                         door.interact("Open");
-                        sleep(1000,2000);
+                        sleep(2000,2100);
+                    }
+                    if( i>=11){
+                        WrongDoor = door;
+                        return;
                     }
                 }
                 LastDoor = door;
